@@ -43,7 +43,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SourceStream.cs" />
+    <Compile Include="ISourceStream.cs" />
     <Compile Include="SourceInfo\WebcamInfo.cs" />
     <Compile Include="VideoStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

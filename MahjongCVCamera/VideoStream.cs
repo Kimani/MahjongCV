@@ -1,13 +1,18 @@
 ﻿// [Ready Design Corps] - [Mahjong CV Core] - Copyright 2018
 
+using System;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace MahjongCVCamera
 {
     public class VideoStream : FrameworkElement
     {
         private VisualCollection _Collection;
+        private DispatcherTimer  _Timer;
+        private DrawingVisual    _BackgroundDrawingVisual;
+        private int              _GreyscaleValue = 0;
 
         protected override int    VisualChildrenCount       { get { return _Collection.Count; } }
         protected override Visual GetVisualChild(int index) { return _Collection[index]; }
@@ -15,6 +20,7 @@ namespace MahjongCVCamera
         public VideoStream()// ISourceStream info)
         {
             _Collection = new VisualCollection(this);
+            _Timer = new DispatcherTimer();
 
             //if (!info.Active) { throw new Exception("Stream unavailable."); }
 
@@ -26,8 +32,8 @@ namespace MahjongCVCamera
             double actualHeight = this.ActualHeight;
             double actualWidth = this.ActualWidth;
 
-            DrawingVisual v = new DrawingVisual();
-            using (DrawingContext dc = v.RenderOpen())
+            _BackgroundDrawingVisual = new DrawingVisual();
+            using (DrawingContext dc = _BackgroundDrawingVisual.RenderOpen())
             {
                 dc.DrawRectangle(
                     Brushes.Blue,
@@ -35,7 +41,7 @@ namespace MahjongCVCamera
                     new Rect(
                         new Point(0, 0),
                         new Size(actualWidth, actualHeight)));
-                _Collection.Add(v);
+                _Collection.Add(_BackgroundDrawingVisual);
             }
 
             int x = 0;
@@ -64,6 +70,34 @@ namespace MahjongCVCamera
                 _Collection.Add(visual);
                 x += 60;
             }
+
+
+            _Timer.Tick += new EventHandler(dispatcherTimer_Tick);
+            _Timer.Interval = new TimeSpan(0, 0, 0, 0, 16);
+            _Timer.Start();
+        }
+
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            using (DrawingContext dc = _BackgroundDrawingVisual.RenderOpen())
+            {
+                double actualHeight = this.ActualHeight;
+                double actualWidth = this.ActualWidth;
+                Color c = new Color();
+                c.R = (byte)_GreyscaleValue;
+                c.G = (byte)_GreyscaleValue;
+                c.B = (byte)_GreyscaleValue;
+                c.A = 255;
+
+                dc.DrawRectangle(
+                    new SolidColorBrush(c),
+                    new Pen(Brushes.Black, 2),
+                    new Rect(
+                        new Point(0, 0),
+                        new Size(actualWidth, actualHeight)));
+            }
+
+            _GreyscaleValue = (_GreyscaleValue + 1) % 255;
         }
     }
 }
