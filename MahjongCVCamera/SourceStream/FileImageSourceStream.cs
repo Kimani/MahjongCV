@@ -12,9 +12,8 @@ namespace MahjongCVCamera
     {
         // ISourceStream
         public bool Connected    { get { return (_ImageCache != null) && _Info.Available; } }
-        public bool Static       { get { return true; } }
-        public int  OutputWidth  { get { return _OutputWidth; }  set { _OutputWidth = value;  _OutputWidthSet = true; } }
-        public int  OutputHeight { get { return _OutputHeight; } set { _OutputHeight = value; _OutputHeightSet = true; } }
+        public uint OutputWidth  { get { return _OutputWidth; }  set { _OutputWidth = value;  _OutputWidthSet = true; } }
+        public uint OutputHeight { get { return _OutputHeight; } set { _OutputHeight = value; _OutputHeightSet = true; } }
 
         public event RepaintEventHandler RepaintRequested;
         public event EventHandler        Disconnected;
@@ -24,12 +23,17 @@ namespace MahjongCVCamera
             return null;
         }
 
-        public bool Reconnect()
+        public void Connect()
         {
-            return LoadImageData();
+            LoadImageData();
         }
 
-        public void Render(DrawingContext dc, int frame)
+        public void Disconnect()
+        {
+            Disconnected?.Invoke(this, null);
+        }
+
+        public void Render(DrawingContext dc, uint frame)
         {
             if ((_ImageCache != null) && (frame > _LastPaintedFrame))
             {
@@ -45,12 +49,12 @@ namespace MahjongCVCamera
         // FileImageSourceStream
         private FileImageSourceInfo _Info;
         private ImageSource         _ImageCache;
-        private int                 _FrameCount = 0;
-        private int                 _LastPaintedFrame = 0;
-        private int                 _InputWidth = 0;
-        private int                 _InputHeight = 0;
-        private int                 _OutputWidth = 0;
-        private int                 _OutputHeight = 0;
+        private uint                _FrameCount = 0;
+        private uint                _LastPaintedFrame = 0;
+        private uint                _InputWidth = 0;
+        private uint                _InputHeight = 0;
+        private uint                _OutputWidth = 0;
+        private uint                _OutputHeight = 0;
         private bool                _OutputWidthSet = false;
         private bool                _OutputHeightSet = false;
 
@@ -69,8 +73,8 @@ namespace MahjongCVCamera
 
                 // Successfully loaded the bitmap. Otherwise just keep whatever bitmap we already have loaded.
                 _ImageCache = source;
-                _InputWidth = imageBitmap.Width;
-                _InputHeight = imageBitmap.Height;
+                _InputWidth = (uint)imageBitmap.Width;
+                _InputHeight = (uint)imageBitmap.Height;
                 if (!_OutputWidthSet)  { _OutputWidth = _InputWidth; }
                 if (!_OutputHeightSet) { _OutputHeight = _InputHeight; }
 

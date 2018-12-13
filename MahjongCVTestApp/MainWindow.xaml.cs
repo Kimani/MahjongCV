@@ -10,8 +10,6 @@ namespace MahjongCVTestApp
         public MainWindow()
         {
             InitializeComponent();
-
-            var x = new VideoStream();
         }
     }
 }

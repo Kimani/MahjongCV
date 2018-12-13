@@ -11,8 +11,9 @@ namespace MahjongCVCamera
         public string Name      { get; private set; }
         public string Path      { get; private set; }
         public bool   Available { get { return AvailableImpl(); } }
+        public bool   Static    { get { return true; } }
 
-        public ISourceStream Open()
+        public ISourceStream Open(uint parentInitialWidth, uint parentInitialHeight)
         {
             if (!Available) { throw new Exception("Image file unavailable."); }
             return new FileImageSourceStream(this);

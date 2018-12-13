@@ -5,29 +5,30 @@ using System.Windows.Media;
 
 namespace MahjongCVCamera
 {
-    public delegate void RepaintEventHandler(int frame);
+    public delegate void RepaintEventHandler(uint frame);
 
     public interface ISourceInfo
     {
         string Name      { get; }
         string Path      { get; }
         bool   Available { get; }
+        bool   Static    { get; }
 
-        ISourceStream Open();
+        ISourceStream Open(uint parentInitialWidth, uint parentInitialHeight);
     }
 
     public interface ISourceStream
     {
         bool Connected    { get; }
-        bool Static       { get; }
-        int  OutputWidth  { get; set; }
-        int  OutputHeight { get; set; }
+        uint OutputWidth  { get; set; }
+        uint OutputHeight { get; set; }
 
         event RepaintEventHandler RepaintRequested;
         event EventHandler        Disconnected;
 
         ISourceInfo TakeSnapshot();
-        bool        Reconnect();
-        void        Render(DrawingContext dc, int frame);
+        void        Connect();
+        void        Disconnect();
+        void        Render(DrawingContext dc, uint frame);
     }
 }
