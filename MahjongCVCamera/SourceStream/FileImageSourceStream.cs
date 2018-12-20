@@ -5,6 +5,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Drawing;
 using System.IO;
+using MahjongCVCamera.SourceInfo;
 
 namespace MahjongCVCamera
 {
@@ -12,37 +13,43 @@ namespace MahjongCVCamera
     {
         // ISourceStream
         public bool Connected    { get { return (_ImageCache != null) && _Info.Available; } }
-        public uint OutputWidth  { get { return _OutputWidth; }  set { _OutputWidth = value;  _OutputWidthSet = true; } }
-        public uint OutputHeight { get { return _OutputHeight; } set { _OutputHeight = value; _OutputHeightSet = true; } }
+        public uint OutputWidth  { get; private set; }
+        public uint OutputHeight { get; private set; }
 
         public event RepaintEventHandler RepaintRequested;
         public event EventHandler        Disconnected;
 
-        public ISourceInfo TakeSnapshot()
-        {
-            return null;
-        }
-
-        public void Connect()
-        {
-            LoadImageData();
-        }
-
-        public void Disconnect()
-        {
-            Disconnected?.Invoke(this, null);
-        }
+        public ISourceInfo TakeSnapshot() { return null; }
+        public void        Connect()      { LoadImageData(); }
+        public void        Disconnect()   { Disconnected?.Invoke(this, null); }
 
         public void Render(DrawingContext dc, uint frame)
         {
             if ((_ImageCache != null) && (frame > _LastPaintedFrame))
             {
-                double outputWidth;
-                double outputHeight;
-                GetOutputSize(out outputWidth, out outputHeight);
-                dc.DrawImage(_ImageCache, new System.Windows.Rect(0, 0, _OutputWidth, _OutputHeight));
+                uint imageWidth;
+                uint imageHeight;
+                GetImageSize(out imageWidth, out imageHeight);
 
+                dc.DrawImage(
+                    _ImageCache,
+                    new System.Windows.Rect(
+                        ((OutputWidth - imageWidth) / 2),
+                        ((OutputHeight - imageHeight) / 2),
+                        imageWidth,
+                        imageHeight));
                 _LastPaintedFrame = _FrameCount;
+            }
+        }
+
+        public void SetOutputSize(uint width, uint height)
+        {
+            OutputWidth = width;
+            OutputHeight = height;
+
+            if (Connected)
+            {
+                RepaintRequested?.Invoke(++_FrameCount);
             }
         }
 
@@ -53,15 +60,12 @@ namespace MahjongCVCamera
         private uint                _LastPaintedFrame = 0;
         private uint                _InputWidth = 0;
         private uint                _InputHeight = 0;
-        private uint                _OutputWidth = 0;
-        private uint                _OutputHeight = 0;
-        private bool                _OutputWidthSet = false;
-        private bool                _OutputHeightSet = false;
 
-        internal FileImageSourceStream(FileImageSourceInfo info)
+        internal FileImageSourceStream(FileImageSourceInfo info, uint parentInitialWidth, uint parentInitialHeight)
         {
             _Info = info;
-            LoadImageData();
+            OutputWidth = parentInitialWidth;
+            OutputHeight = parentInitialHeight;
         }
 
         private bool LoadImageData()
@@ -75,8 +79,6 @@ namespace MahjongCVCamera
                 _ImageCache = source;
                 _InputWidth = (uint)imageBitmap.Width;
                 _InputHeight = (uint)imageBitmap.Height;
-                if (!_OutputWidthSet)  { _OutputWidth = _InputWidth; }
-                if (!_OutputHeightSet) { _OutputHeight = _InputHeight; }
 
                 RepaintRequested?.Invoke(++_FrameCount);
                 return true;
@@ -101,20 +103,21 @@ namespace MahjongCVCamera
             }
         }
 
-        private void GetOutputSize(out double width, out double height)
+        private void GetImageSize(out uint width, out uint height)
         {
-            width = _OutputWidth;
-            height = _OutputHeight;
+            // https://stackoverflow.com/questions/6565703/math-algorithm-fit-image-to-screen-retain-aspect-ratio
+            double imageRatio = ((double)_InputWidth) / ((double)_InputHeight);
+            double screenRatio = ((double)OutputWidth) / ((double)OutputHeight);
 
-            if (_OutputWidthSet && !_OutputHeightSet)
+            if (screenRatio > imageRatio)
             {
-                double ratio = ((double)_InputWidth) / ((double)_InputHeight);
-                height = Math.Round(width / ratio);
+                width = (uint)(((double)_InputWidth) * (((double)OutputHeight) / ((double)_InputHeight)));
+                height = OutputHeight;
             }
-            else if (!_OutputWidthSet && _OutputHeightSet)
+            else
             {
-                double ratio = ((double)_InputWidth) / ((double)_InputHeight);
-                width = Math.Round(height * ratio);
+                width = OutputWidth;
+                height = (uint)(((double)_InputHeight) * (((double)OutputWidth) / ((double)_InputWidth)));
             }
         }
     }

@@ -1,7 +1,6 @@
 ﻿<Window x:Class="MahjongCVTestApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:MahjongCVTestApp"
         xmlns:cv="clr-namespace:MahjongCVCamera;assembly=MahjongCVCamera"
         xmlns:cvinfo="clr-namespace:MahjongCVCamera.SourceInfo;assembly=MahjongCVCamera"
         Title="Mahjong Stream Test App"
@@ -9,9 +8,10 @@
         Width="525">
     <Window.Resources>
         <cvinfo:AnimatedGradientInfo x:Key="GradientInfo" />
+        <cvinfo:FileImageSourceInfo x:Key="ImageInfo" Path="D:\\Projects\\Git\\MahjongSky\\mahjongsky\\Resources\\kagami.png" />
     </Window.Resources>
 
     <Grid Background="Azure">
-        <cv:VideoStream SourceInfo="{StaticResource GradientInfo}" Margin="100" />
+        <cv:VideoStream SourceInfo="{StaticResource ImageInfo}" Margin="100" />
     </Grid>
 </Window>

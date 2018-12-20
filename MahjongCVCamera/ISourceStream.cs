@@ -20,8 +20,8 @@ namespace MahjongCVCamera
     public interface ISourceStream
     {
         bool Connected    { get; }
-        uint OutputWidth  { get; set; }
-        uint OutputHeight { get; set; }
+        uint OutputWidth  { get; }
+        uint OutputHeight { get; }
 
         event RepaintEventHandler RepaintRequested;
         event EventHandler        Disconnected;
@@ -30,5 +30,6 @@ namespace MahjongCVCamera
         void        Connect();
         void        Disconnect();
         void        Render(DrawingContext dc, uint frame);
+        void        SetOutputSize(uint width, uint height);
     }
 }

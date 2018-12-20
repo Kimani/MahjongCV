@@ -6,6 +6,7 @@ using System.Windows.Media;
 
 namespace MahjongCVCamera
 {
+    // https://stackoverflow.com/questions/6084585/wpf-drawingvisual-on-a-background-thread
     // https://blogs.msdn.microsoft.com/dwayneneed/2007/04/26/multithreaded-ui-hostvisual/
     public class VisualTargetPresentationSource : PresentationSource
     {

@@ -81,6 +81,8 @@ namespace MahjongCVCamera
         private Dispatcher       _AnimatedStreamDispatcher = null;
         private uint             _NextFrameToDraw = 0;
         private uint?            _LastDrawnFrame = null;
+        private double           _LastWidth;
+        private double           _LastHeight;
 
         public VideoStream()
         {
@@ -89,6 +91,7 @@ namespace MahjongCVCamera
 
             Loaded += OnLoaded;
             Unloaded += OnUnloaded;
+            SizeChanged += OnSizeChanged;
         }
 
         private static void OnSourceInfoPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
@@ -108,7 +111,7 @@ namespace MahjongCVCamera
             if (_Loaded)
             {
                 if (prevInfo != null) { UnloadSourceInfo(prevInfo); }
-                if (nextInfo != null) { LoadSourceInfo(nextInfo); }
+                if (nextInfo != null) { LoadSourceInfo(nextInfo); } // NEED TO DO SOMETHING TO MAKE IT REQUERY VisualChildrenCount HERE
             }
         }
 
@@ -125,28 +128,61 @@ namespace MahjongCVCamera
             if (_LocalInfo != null) { UnloadSourceInfo(_LocalInfo); }
         }
 
-        private void UnloadSourceInfo(ISourceInfo info)
+        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Dispatcher.VerifyAccess();
-
-            if (_AnimatedStreamThread != null)
+            if ((_CurrentStream != null) && ((e.NewSize.Width != _LastWidth) || (e.NewSize.Height != _LastHeight)))
             {
-                // TODO: this
-
-                _AnimatedStreamThread = null;
+                _LastWidth = e.NewSize.Width;
+                _LastHeight = e.NewSize.Height;
+                _CurrentStream.SetOutputSize((uint)_LastWidth, (uint)_LastHeight);
             }
-
-            _NextFrameToDraw = 0;
-            _LastDrawnFrame = null;
         }
 
-        private void LoadSourceInfo(ISourceInfo info)
+        private void UnloadSourceInfo(ISourceInfo info)
         {
             Dispatcher.VerifyAccess();
 
             if (info.Static)
             {
-                // TODO: this
+                _CurrentStream.RepaintRequested -= StreamRepaintRequested;
+                _CurrentStream.Disconnected -= StreamDisconnected;
+                _CurrentStream.Disconnect();
+
+                _CurrentStream = null;
+                _StreamRenderTarget = null;
+            }
+            else
+            {
+                if (_AnimatedStreamThread != null)
+                {
+                    // TODO: this
+                    _AnimatedStreamThread = null;
+                }
+            }
+
+            _Collection.Clear();
+            _NextFrameToDraw = 0;
+            _LastDrawnFrame = null;
+
+            // TODO: Signal VisualChildrenCount reevaluation?
+        }
+
+        private void LoadSourceInfo(ISourceInfo info)
+        {
+            Dispatcher.VerifyAccess();
+            _LastWidth = ActualWidth;
+            _LastHeight = ActualHeight;
+
+            if (info.Static)
+            {
+                // Paint the stream on the main UI thread. The overhead of a background thread is not needed.
+                _StreamRenderTarget = new DrawingVisual();
+                _Collection.Add(_StreamRenderTarget);
+
+                _CurrentStream = info.Open((uint)_LastWidth, (uint)_LastHeight);
+                _CurrentStream.RepaintRequested += StreamRepaintRequested;
+                _CurrentStream.Disconnected += StreamDisconnected;
+                _CurrentStream.Connect();
             }
             else
             {
@@ -156,7 +192,7 @@ namespace MahjongCVCamera
                 HostVisual hostVisual = new HostVisual();
 
                 // Create a background thread to load the stream and then perform the STA message loop.
-                StreamThreadArgs args = new StreamThreadArgs(info, hostVisual, (uint)this.ActualWidth, (uint)this.ActualHeight);
+                StreamThreadArgs args = new StreamThreadArgs(info, hostVisual, (uint)_LastWidth, (uint)_LastHeight);
 
                 _AnimatedStreamThread = new Thread(new ParameterizedThreadStart(StreamWorkerThread));
                 _AnimatedStreamThread.SetApartmentState(ApartmentState.STA);
@@ -201,11 +237,14 @@ namespace MahjongCVCamera
             _CurrentStream.Disconnect();
             _CurrentStream = null;
             _AnimatedStreamDispatcher = null;
+            _StreamRenderTarget = null;
         }
 
         private void StreamRepaintRequested(uint frame)
         {
-            if (_AnimatedStreamDispatcher.CheckAccess())
+            Dispatcher dispatcherToUse = _LocalInfo.Static ? _Dispatcher : _AnimatedStreamDispatcher;
+
+            if (dispatcherToUse.CheckAccess())
             {
                 _NextFrameToDraw = frame;
                 StreamPaint(frame);
@@ -213,12 +252,12 @@ namespace MahjongCVCamera
             }
             else
             {
-                // We're not on the worker thread. Queue the repaint onto the worker thread.
+                // We're not on the correct thread. Queue the repaint onto the correct thread.
                 // Many repaints may queue before we get a chance to render. Take the most recent
                 // frame and draw that. Skip all the stale events that may happen in the interim,
                 // although a stale event may become live if a frame is queued again.
                 _NextFrameToDraw = frame;
-                _AnimatedStreamDispatcher.BeginInvoke(new FrameRenderDelegate(() =>
+                dispatcherToUse.BeginInvoke(new FrameRenderDelegate(() =>
                     {
                         uint frameToRender = _NextFrameToDraw;
                         if ((_LastDrawnFrame == null) || (_NextFrameToDraw > _LastDrawnFrame))
