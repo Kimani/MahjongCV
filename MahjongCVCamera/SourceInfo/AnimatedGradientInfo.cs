@@ -12,9 +12,9 @@ namespace MahjongCVCamera.SourceInfo
         public bool   Available { get { return true; } }
         public bool   Static    { get { return false; } }
 
-        public ISourceStream Open(uint parentInitialWidth, uint parentInitialHeight)
-        {
-            return new AnimatedGradientSourceStream(parentInitialWidth, parentInitialHeight);
-        }
+        public ISourceStream Open(uint parentInitialWidth, uint parentInitialHeight) { return new AnimatedGradientSourceStream(parentInitialWidth, parentInitialHeight); }
+
+        // AnimatedGradientInfo
+        public override string ToString() { return Name; }
     }
 }

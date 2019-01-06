@@ -19,7 +19,7 @@ namespace MahjongCVCamera
         public event RepaintEventHandler RepaintRequested;
         public event EventHandler        Disconnected;
 
-        public ISourceInfo TakeSnapshot() { return null; }
+        public ISourceInfo TakeSnapshot() { throw new NotImplementedException(); }
         public void        Connect()      { LoadImageData(); }
         public void        Disconnect()   { Disconnected?.Invoke(this, null); }
 
@@ -27,9 +27,7 @@ namespace MahjongCVCamera
         {
             if ((_ImageCache != null) && (frame > _LastPaintedFrame))
             {
-                uint imageWidth;
-                uint imageHeight;
-                GetImageSize(out imageWidth, out imageHeight);
+                GetImageSize(out uint imageWidth, out uint imageHeight);
 
                 dc.DrawImage(
                     _ImageCache,

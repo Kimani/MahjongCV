@@ -18,7 +18,7 @@ namespace MahjongCVCamera.SourceStream
         public event RepaintEventHandler RepaintRequested;
         public event EventHandler        Disconnected;
 
-        public ISourceInfo TakeSnapshot() { return null; }
+        public ISourceInfo TakeSnapshot() { throw new NotImplementedException(); }
 
         public void Connect()
         {
@@ -45,11 +45,7 @@ namespace MahjongCVCamera.SourceStream
             float perc = ((float)(frame % 60)) / 59.0f;
             byte grey = (byte)(255.0f * perc);
 
-            Color c = new Color();
-            c.R = grey;
-            c.G = grey;
-            c.B = grey;
-            c.A = 255;
+            Color c = new Color { R = grey, G = grey, B = grey, A = 255 };
 
             Point renderPoint = new Point(0, 0);
             dc.DrawRectangle(

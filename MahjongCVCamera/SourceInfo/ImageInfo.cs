@@ -22,6 +22,8 @@ namespace MahjongCVCamera.SourceInfo
         // FileImageSourceInfo
         private string _Path;
 
+        public override string ToString() { return Name; }
+
         private void SetPathImpl(string path)
         {
             if (path != null)

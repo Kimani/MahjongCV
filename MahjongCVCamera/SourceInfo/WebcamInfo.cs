@@ -2,27 +2,32 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MahjongCVCamera.SourceInfo
 {
-    public class WebcamInfo
+    public class WebcamInfo : ISourceInfo
     {
+        // ISourceInfo
+        public string Name      { get; private set; }
+        public string Path      { get; private set; }
+        public bool   Available { get { return AvailableImpl(); } }
+        public bool   Static    { get { return false; } }
+
+        public ISourceStream Open(uint parentInitialWidth, uint parentInitialHeight)
+        {
+            throw new NotImplementedException();
+        }
+
+        // WebcamInfo
         public static IEnumerable<WebcamInfo> EnumerateCameras()
         {
             return null;
         }
 
-        public string FriendlyName { get; private set; }
-        public string DevicePath   { get; private set; }
-        public bool   Available    { get { return AvailableImpl(); } }
-
         private WebcamInfo(string name, string path)
         {
-            FriendlyName = name;
-            DevicePath = path;
+            Name = name;
+            Path = path;
         }
 
         private bool AvailableImpl()

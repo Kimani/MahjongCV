@@ -28,12 +28,8 @@ namespace MahjongCVCamera
         }
     }
 
-    public class VideoStream : FrameworkElement, INotifyPropertyChanged
+    public class VideoStream : FrameworkElement
     {
-        // INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        // VideoStream
         public static readonly DependencyProperty SourceInfoProperty =
             DependencyProperty.Register(
                 "SourceInfo",
@@ -42,9 +38,7 @@ namespace MahjongCVCamera
                 new FrameworkPropertyMetadata(
                     null,
                     new PropertyChangedCallback(OnSourceInfoPropertyChanged)));
-
-        //new PropertyMetadata(null));
-
+ 
         public ISourceInfo SourceInfo
         {
             get { return GetValue(SourceInfoProperty) as ISourceInfo; }
@@ -102,7 +96,6 @@ namespace MahjongCVCamera
                 videoStream._LocalInfo = e.NewValue as ISourceInfo;
                 videoStream.SourceInfoChanged((e.OldValue as ISourceInfo), (e.NewValue as ISourceInfo));
             }
-            //PropertyChanged?.Invoke(sender, new PropertyChangedEventArgs("SourceInfo"));
         }
 
         private void SourceInfoChanged(ISourceInfo prevInfo, ISourceInfo nextInfo)
@@ -155,7 +148,8 @@ namespace MahjongCVCamera
             {
                 if (_AnimatedStreamThread != null)
                 {
-                    // TODO: this
+                    _AnimatedStreamDispatcher.BeginInvokeShutdown(DispatcherPriority.Normal);
+                    _AnimatedStreamThread.Join(1000);
                     _AnimatedStreamThread = null;
                 }
             }
@@ -163,8 +157,6 @@ namespace MahjongCVCamera
             _Collection.Clear();
             _NextFrameToDraw = 0;
             _LastDrawnFrame = null;
-
-            // TODO: Signal VisualChildrenCount reevaluation?
         }
 
         private void LoadSourceInfo(ISourceInfo info)
@@ -211,7 +203,7 @@ namespace MahjongCVCamera
             if (_CurrentStream != null) { throw new Exception("Stale stream shouldn't exist when starting a new stream!"); }
 
             // Setup stream resources, as well as the HostVisual. Then signal the UI thread to continue.
-            _AnimatedStreamDispatcher = Dispatcher.CurrentDispatcher;//.FromThread(Thread.CurrentThread);
+            _AnimatedStreamDispatcher = Dispatcher.CurrentDispatcher;
 
             var argsWrapper = arg as StreamThreadArgs?;
             StreamThreadArgs args = argsWrapper.Value;

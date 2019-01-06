@@ -12,6 +12,22 @@
     </Window.Resources>
 
     <Grid Background="Azure">
-        <cv:VideoStream SourceInfo="{StaticResource ImageInfo}" Margin="100" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <!-- Controls -->
+        <Grid Background="LightGray">
+            <ComboBox 
+                x:Name="SourceInfoSelector"
+                ItemsSource="{Binding SourceInfoCollection}"
+                SelectedIndex="0"
+                VerticalContentAlignment="Center" />
+        </Grid>
+        <Border BorderBrush="Gray" BorderThickness="0,0,0,1"/>
+
+        <!-- Video Stream -->
+        <cv:VideoStream SourceInfo="{Binding ElementName=SourceInfoSelector, Path=SelectedItem}" Margin="100" Grid.Row="1" />
     </Grid>
 </Window>
