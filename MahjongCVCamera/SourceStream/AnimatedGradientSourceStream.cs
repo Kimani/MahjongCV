@@ -86,8 +86,9 @@ namespace MahjongCVCamera.SourceStream
         private void RepaintThread(object arg)
         {
             int lastPaintTick = _FirstPaintTick;
+            int currentSession = (int)arg;
 
-            for (uint nextFrame = 1; ((int)arg) == _Session; ++nextFrame)
+            for (uint nextFrame = 1; currentSession == _Session; ++nextFrame)
             {
                 int nextSleepTime = 16 - Math.Min(16, (Environment.TickCount - lastPaintTick));
                 Thread.Sleep(nextSleepTime);
