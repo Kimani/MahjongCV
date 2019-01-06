@@ -12,9 +12,11 @@ namespace MahjongCVTestApp
         {
             get
             {
-                var collection = new ObservableCollection<ISourceInfo>();
-                collection.Add(FindResource("GradientInfo") as ISourceInfo);
-                collection.Add(FindResource("ImageInfo") as ISourceInfo);
+                var collection = new ObservableCollection<ISourceInfo>
+                {
+                    FindResource("GradientInfo") as ISourceInfo,
+                    FindResource("ImageInfo") as ISourceInfo
+                };
                 return collection;
             }
         }
@@ -23,6 +25,9 @@ namespace MahjongCVTestApp
         {
             DataContext = this;
             InitializeComponent();
+
+            WebcamCollection cs = new WebcamCollection();
+            cs.EnumerateCameras();
         }
     }
 }

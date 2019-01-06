@@ -1,7 +1,6 @@
 ﻿// [Ready Design Corps] - [Mahjong CV Core] - Copyright 2018
 
 using System;
-using System.Collections.Generic;
 
 namespace MahjongCVCamera.SourceInfo
 {
@@ -19,12 +18,7 @@ namespace MahjongCVCamera.SourceInfo
         }
 
         // WebcamInfo
-        public static IEnumerable<WebcamInfo> EnumerateCameras()
-        {
-            return null;
-        }
-
-        private WebcamInfo(string name, string path)
+        internal WebcamInfo(string name, string path)
         {
             Name = name;
             Path = path;
