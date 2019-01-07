@@ -5,6 +5,6 @@
 
 #pragma once
 
-typedef void(__stdcall *EnumVideoInputDevicesCallback)(PCWSTR path, _In_opt_ PCWSTR name);
+typedef void (__stdcall *EnumVideoInputDevicesCallback) (PCWSTR path, _In_opt_ PCWSTR name);
 
-HRESULT EnumVideoInputDevices(EnumVideoInputDevicesCallback callback);
+extern "C" HRESULT EnumVideoInputDevices(EnumVideoInputDevicesCallback callback);

@@ -7,10 +7,10 @@ namespace MahjongCVCamera
 {
     public static class NativeMethods
     {
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate void EnumVideoInputDevicesCallback([MarshalAs(UnmanagedType.LPWStr)] string path, [MarshalAs(UnmanagedType.LPWStr)] string name);
 
-        [DllImport("MahjongCVCore.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("MahjongCVCore.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern uint EnumVideoInputDevices(IntPtr callback);
     }
 }

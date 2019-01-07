@@ -44,7 +44,7 @@ HRESULT EnumSingleVideoInputDevice(IPropertyBag* propBag, EnumVideoInputDevicesC
     return S_OK;
 }
 
-HRESULT EnumVideoInputDevices(EnumVideoInputDevicesCallback callback)
+extern "C" HRESULT EnumVideoInputDevices(EnumVideoInputDevicesCallback callback)
 {
     ComPtr<ICreateDevEnum> devEnum;
     RETURN_IF_FAILED(CoCreateInstance(CLSID_SystemDeviceEnum, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&devEnum)));

@@ -9,20 +9,6 @@
 
 using namespace Microsoft::WRL;
 
-/*
-BOOL APIENTRY DllMain(HMODULE module, DWORD callReason, void* reserved)
-{
-    switch (callReason)
-    {
-    case DLL_PROCESS_ATTACH:
-    case DLL_THREAD_ATTACH:
-    case DLL_THREAD_DETACH:
-    case DLL_PROCESS_DETACH:
-        break;
-    }
-    return TRUE;
-}*/
-
 STDAPI DllGetActivationFactory(_In_ HSTRING activatableClassId, _COM_Outptr_ IActivationFactory** factory)
 {
     return Module<ModuleType::InProc>::GetModule().GetActivationFactory(activatableClassId, factory);
