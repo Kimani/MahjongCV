@@ -93,9 +93,12 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>strmiids.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>strmiids.lib;Mfplat.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>MahjongCVCore.def</ModuleDefinitionFile>
     </Link>
+    <PostBuildEvent>
+      <Command>copy $(OutDir)$(ProjectName).dll $(SolutionDir)MahjongCVTestApp\bin\$(Configuration)\</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -148,8 +151,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="EVRDevice.h" />
     <ClInclude Include="MahjongCVCore.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="ResourceHelpers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -166,7 +171,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="MahjongCVCore.cpp" />
+    <ClCompile Include="EVRDevice.cpp" />
+    <ClCompile Include="EVRDeviceManagement.cpp" />
+    <ClCompile Include="WebcamEnumeration.cpp" />
     <ClCompile Include="pch.cpp" />
   </ItemGroup>
   <ItemGroup>

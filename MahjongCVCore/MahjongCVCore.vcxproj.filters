@@ -20,15 +20,27 @@
     <ClInclude Include="MahjongCVCore.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="EVRDevice.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceHelpers.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MahjongCVCore.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="dllmain.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="WebcamEnumeration.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="EVRDeviceManagement.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="EVRDevice.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

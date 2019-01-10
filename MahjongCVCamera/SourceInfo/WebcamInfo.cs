@@ -1,6 +1,6 @@
 ﻿// [Ready Design Corps] - [Mahjong CV Core] - Copyright 2018
 
-using System;
+using MahjongCVCamera.SourceStream;
 
 namespace MahjongCVCamera.SourceInfo
 {
@@ -14,10 +14,13 @@ namespace MahjongCVCamera.SourceInfo
 
         public ISourceStream Open(uint parentInitialWidth, uint parentInitialHeight)
         {
-            throw new NotImplementedException();
+            //if (!Available) { throw new Exception("Webcam unavailable."); }
+            return new WebcamStream(parentInitialWidth, parentInitialHeight);
         }
 
         // WebcamInfo
+        public override string ToString() { return Name; }
+
         internal WebcamInfo(string name, string path)
         {
             Name = name;
@@ -26,6 +29,7 @@ namespace MahjongCVCamera.SourceInfo
 
         private bool AvailableImpl()
         {
+            // TODO: this
             return false;
         }
     }

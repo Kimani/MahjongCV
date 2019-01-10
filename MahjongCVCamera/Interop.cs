@@ -12,5 +12,11 @@ namespace MahjongCVCamera
 
         [DllImport("MahjongCVCore.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern uint EnumVideoInputDevices(IntPtr callback);
+
+        [DllImport("MahjongCVCore.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern uint InitializeEVR();
+
+        [DllImport("MahjongCVCore.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern uint UninitializeEVR();
     }
 }

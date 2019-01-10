@@ -8,9 +8,6 @@
 
 using namespace Microsoft::WRL;
 
-// https://opencv.org/opencv-4-0-0.html
-// https://dsp.stackexchange.com/questions/25263/why-is-c-so-popular-for-image-processing
-
 HRESULT EnumSingleVideoInputDevice(IPropertyBag* propBag, EnumVideoInputDevicesCallback callback)
 {
     VARIANT var;
@@ -20,11 +17,6 @@ HRESULT EnumSingleVideoInputDevice(IPropertyBag* propBag, EnumVideoInputDevicesC
     RETURN_IF_FAILED(propBag->Read(L"DevicePath", &var, 0));
     RETURN_HR_IF(E_UNEXPECTED, (var.vt != VT_BSTR));
     RETURN_HR_IF(E_UNEXPECTED, (var.bstrVal == nullptr));
-
-    /*size_t pathStrLen = SysStringLen(var.bstrVal) + 1;
-    wchar_t *pathStr = new wchar_t[pathStrLen];
-    ZeroMemory(pathStr, (sizeof(wchar_t) * pathStrLen));
-    wcscpy_s(pathStr, pathStrLen, static_cast<wchar_t*>(var.bstrVal));*/
 
     std::wstring pathStr(var.bstrVal, SysStringLen(var.bstrVal));
     VariantClear(&var);

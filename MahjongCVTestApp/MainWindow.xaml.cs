@@ -17,17 +17,30 @@ namespace MahjongCVTestApp
                     FindResource("GradientInfo") as ISourceInfo,
                     FindResource("ImageInfo") as ISourceInfo
                 };
+
+                foreach (ISourceInfo info in _Webcams.Webcams)
+                {
+                    collection.Add(info);
+                }
                 return collection;
             }
         }
 
+        private WebcamCollection _Webcams;
+
         public MainWindow()
         {
+            _Webcams = WebcamCollection.GetInstance();
+            _Webcams.WebcamCollectionChanged += WebcamCollectionChanged;
+            _Webcams.EnsureConnected();
+
             DataContext = this;
             InitializeComponent();
+        }
 
-            WebcamCollection cs = new WebcamCollection();
-            cs.EnumerateCameras();
+        private void WebcamCollectionChanged(object sender, WebcamCollectionChangedEventArgs e)
+        {
+            //throw new System.NotImplementedException();
         }
     }
 }

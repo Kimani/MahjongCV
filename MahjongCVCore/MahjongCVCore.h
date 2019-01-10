@@ -8,3 +8,5 @@
 typedef void (__stdcall *EnumVideoInputDevicesCallback) (PCWSTR path, _In_opt_ PCWSTR name);
 
 extern "C" HRESULT EnumVideoInputDevices(EnumVideoInputDevicesCallback callback);
+extern "C" HRESULT InitializeEVR();
+extern "C" HRESULT UninitializeEVR();

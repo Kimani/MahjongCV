@@ -51,6 +51,7 @@
     <Compile Include="SourceInfo\WebcamInfo.cs" />
     <Compile Include="SourceStream\AnimatedGradientSourceStream.cs" />
     <Compile Include="SourceStream\FileImageSourceStream.cs" />
+    <Compile Include="SourceStream\WebcamStream.cs" />
     <Compile Include="VideoStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VisualTargetPresentationSource.cs" />
@@ -62,7 +63,9 @@
       <Name>MahjongCVCore</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="- TODO.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -3,3 +3,5 @@ EXPORTS
     DllGetActivationFactory                       PRIVATE
     DllGetClassObject                             PRIVATE
     EnumVideoInputDevices                         @101
+    InitializeEVR                                 @102
+    UninitializeEVR                               @103

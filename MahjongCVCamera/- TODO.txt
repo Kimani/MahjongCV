@@ -1,0 +1,26 @@
+﻿
+References:
+https://docs.microsoft.com/en-us/windows/desktop/medfound/enhanced-video-renderer
+https://docs.microsoft.com/en-us/windows/desktop/directshow/enhanced-video-renderer-filter
+https://stackoverflow.com/questions/38706914/directshow-media-foundation-dxva-what <--- Explanation of stuff... what MF is anyway
+
+https://codereview.stackexchange.com/questions/183616/updating-wpf-image-from-camera-frame-grabber-thread
+https://stackoverflow.com/questions/24652901/grab-picture-from-web-cam-in-wpf-application
+https://www.codeproject.com/Articles/330177/Yet-another-Web-Camera-control
+https://github.com/jacobbo/WebEye/tree/master/WebCameraControl/WPF/WebCameraControl
+https://stackoverflow.com/questions/36890103/displaying-a-videostream-from-my-webcam-in-wpf
+
+https://opencv.org/opencv-4-0-0.html
+https://dsp.stackexchange.com/questions/25263/why-is-c-so-popular-for-image-processing
+
+// EVR Reference. Same interfaces between MF and DirectShow versions.
+https://docs.microsoft.com/en-us/windows/desktop/directshow/enhanced-video-renderer-filter
+
+// How to use MF EVR "Media Sink" (versus the DirectShow Filter)
+https://docs.microsoft.com/en-us/windows/desktop/medfound/using-the-evr-media-sink
+https://docs.microsoft.com/en-us/windows/desktop/api/evr/nc-evr-mfcreatevideorenderer  // "This function creates the Media Foundation version of the EVR. To create the DirectShow EVR filter, call CoCreateInstance with the class identifier CLSID_EnhancedVideoRenderer."
+
+// Writing an EVR presenter. IE drawing to a texture.
+https://docs.microsoft.com/en-us/windows/desktop/medfound/how-to-write-an-evr-presenter
+https://docs.microsoft.com/en-us/windows/desktop/medfound/evrpresenter-sample
+https://github.com/Sascha-L/WPF-MediaKit/tree/master/EVR%20Presenter // Someone did it here...

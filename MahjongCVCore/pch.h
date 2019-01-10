@@ -7,6 +7,7 @@
 #include <SDKDDKVer.h>
 #include <windows.h>
 #include <wrl/client.h>
+#include <wrl/implements.h>
 
 #define RETURN_IF_FAILED(x)      do { HRESULT stat = (x); if (FAILED(stat)) return stat;    } while(0)
 #define RETURN_HR_IF(hrMacro, x) do { bool    stat = (x); if (x)            return hrMacro; } while(0)
